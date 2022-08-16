@@ -119,7 +119,7 @@ class MaskedAutoencoderViT(nn.Module):
         if use_clip is False:
             self.decoder_pred = nn.Linear(decoder_embed_dim, patch_size**2 * in_chans, bias=True) # decoder to patch
         else:
-            self.decoder_pred = nn.Linear(decoder_embed_dim, 768, bias=True) # clip output [batch x seq x 512]
+            self.decoder_pred = nn.Linear(decoder_embed_dim, 512, bias=True) # clip output [batch x seq x 512]
         # --------------------------------------------------------------------------
 
         self.norm_pix_loss = norm_pix_loss
