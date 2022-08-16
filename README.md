@@ -111,7 +111,7 @@ We provide the pretrained ViT-B/16 and ViT-L/16 checkpoints.
   </tr>
 </table>
 
-## Citation
+### Citation
 If you find this repository helpful, please consider citing:
 ```Shell
 @article{MILAN2022,
