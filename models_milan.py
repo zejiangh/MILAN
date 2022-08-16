@@ -337,33 +337,6 @@ class MaskedAutoencoderViT(nn.Module):
             loss = 2 - 2 * (pred * clip_teacher).sum(dim=-1)
             loss = loss.mean()
 
-            if cidx is not None and cluster_result is not None:
-                prototypes = cluster_result['centroids']
-                density = cluster_result['density']
-                im2cluster = cluster_result['im2cluster']
-                # get positive prototypes
-                pos_proto_id = im2cluster[cidx]
-                pos_prototypes = prototypes[pos_proto_id]
-                # sample negative prototypes
-                all_proto_id = [H for H in range(65536)]
-                neg_proto_id = set(all_proto_id) - set(pos_proto_id.tolist())
-                neg_proto_id = sample(neg_proto_id, 16000) # sample r negative prototypes
-                neg_prototypes = prototypes[neg_proto_id]
-                proto_selected = torch.cat([pos_prototypes, neg_prototypes], dim=0)
-                # compute prototypical logits
-                q = pred[:, :1, :].squeeze(1)
-                logits_proto = torch.mm(q, proto_selected.t())
-                # targets for prototype assignment
-                labels_proto = torch.linspace(0, q.size(0)-1, steps=q.size(0)).long().to(pred.device)
-                # scaling temperatures for the selected prototypes
-                temp_proto = density[torch.cat([pos_proto_id, torch.LongTensor(neg_proto_id).to(pred.device)], dim=0)]
-                logits_proto /= temp_proto
-                loss_proto = F.cross_entropy(logits_proto, labels_proto)
-
-                # balance factor is hyper-parameter
-                # want cosine loss dominate
-                loss += 0.05 * loss_proto
-
             return loss
 
     def forward(self, imgs, mask_ratio=0.75, clip_teacher=None, cidx=None, cluster_result=None):
