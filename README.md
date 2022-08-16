@@ -1,4 +1,4 @@
-## MILAN: Masked Image Pretraining on Language Assisted Representation
+# MILAN: Masked Image Pretraining on Language Assisted Representation
 
 This repository contains the PyTorch implementation of the paper [MILAN: Masked Image Pretraining on Language Assisted Representation](https://arxiv.org/pdf/2208.06049.pdf).
 
