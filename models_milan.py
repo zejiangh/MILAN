@@ -68,10 +68,6 @@ class Block_fordecoder(nn.Module):
         mlp_hidden_dim = int(dim * mlp_ratio)
         self.mlp = Mlp(in_features=dim, hidden_features=mlp_hidden_dim, act_layer=act_layer, drop=drop)
 
-        # # NOTE not sure norm3 is necessary !!!
-        # # NOTE not sure apply self.norm3(fix_encoding_tokens) !!!
-        # self.norm3 = norm_layer(dim)
-
     def forward(self, x, fix_encoding_tokens, ids_restore, ids_shuffle, ids_keep, ids_dump):
         x = x + self.drop_path(self.attn(self.norm1(x), fix_encoding_tokens, ids_restore, ids_shuffle, ids_keep, ids_dump))
         x = x + self.drop_path(self.mlp(self.norm2(x)))
@@ -342,8 +338,6 @@ class MaskedAutoencoderViT(nn.Module):
     def forward(self, imgs, mask_ratio=0.75, clip_teacher=None, cidx=None, cluster_result=None):
         if self.use_clip:
             clip_teacher, importance = clip_teacher[0], clip_teacher[1]
-            # print(clip_teacher.shape, importance.shape)
-            # sys.exit()
             importance = importance[:, 0, 1:]
         else:
             clip_teacher, importance = None, None
